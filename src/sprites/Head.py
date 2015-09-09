@@ -1,5 +1,5 @@
 import pygame
-from constants import *
+from src.constants import *
 
 class Head(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -14,17 +14,16 @@ class Head(pygame.sprite.Sprite):
         self.direction = RIGHT
         self.stepProgress = 0
 
-    def goUp(self):
-        self.direction = UP
+    def changeDirection(self, direction):
+        if direction == self.direction:
+            return False
 
-    def goDown(self):
-        self.direction = DOWN
+        # U-turn is not allowed
+        if [sum(x) for x in zip(direction, self.direction)] == [0, 0]:
+            return False
 
-    def goLeft(self):
-        self.direction = LEFT
-
-    def goRight(self):
-        self.direction = RIGHT
+        self.direction = direction
+        return True
 
     def update(self, time):
         self.stepProgress += time
@@ -35,6 +34,3 @@ class Head(pygame.sprite.Sprite):
             self.rect.y = (self.rect.y + (self.direction[1] * SEGMENT_SIZE)) % FIELD_HEIGHT
         else:
             pass
-
-        print(self.rect.x)
-

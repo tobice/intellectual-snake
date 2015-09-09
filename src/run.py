@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import pygame
+import sys
 from IntellectualSnake import *
-from FpsClock import *
+from src.utils.FpsClock import *
 
 def main():
     # Initialize Everything
@@ -26,6 +26,9 @@ def main():
 
     pygame.quit()
 
+if not pygame.font:
+    print ('Fonts disabled! Unable to play the game')
+    sys.exit(1)
+
 if __name__ == '__main__':
     main()
-
