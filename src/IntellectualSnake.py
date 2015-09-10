@@ -1,9 +1,11 @@
+import random
 from pygame.locals import *
 
 from src.utils.textUtils import *
 from src.sprites.Head import *
 from src.sprites.DirectionControl import *
 from src.sprites.Segment import *
+from src.sprites.Food import *
 
 class IntellectualSnake:
     def __init__(self):
@@ -37,6 +39,13 @@ class IntellectualSnake:
         for control in self.directionControls:
             control.setLetter(self.generateNewDirectionLetter())
 
+        # Init Group of field objects that should not collide
+        self.fieldObjects = pygame.sprite.Group()
+        self.fieldObjects.add(self.segments)
+
+        # Add initial food to the field
+        self.addNewFood()
+
     def update(self, time):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -46,19 +55,26 @@ class IntellectualSnake:
             elif event.type == KEYDOWN:
                 self.handleKeyDown(event.key)
 
+        # Move the snake
         self.head.update(time)
 
         if self.head.moved:
-            self.segments.pop()
-            self.segments.insert(0, Segment(self.head.rect.x, self.head.rect.y))
+            eatenFood = False
+
+            # Check for collisions
+            for sprite in pygame.sprite.spritecollide(self.head, self.fieldObjects, False):
+                if type(sprite) is Food:
+                    self.fieldObjects.remove(sprite)
+                    self.addNewFood()
+                    eatenFood = True
+
+            self.moveBody(eatenFood)
 
     def render(self):
         field = pygame.Surface([FIELD_WIDTH, FIELD_HEIGHT])
         field.fill((0, 0, 255))
         field.blit(self.head.image, self.head.rect)
-
-        for segment in self.segments:
-            field.blit(segment.image, segment.rect)
+        self.fieldObjects.draw(field)
 
         self.screen.blit(self.background, (0, 0))
         self.screen.blit(field, (FIELD_MARGIN, FIELD_MARGIN))
@@ -87,9 +103,35 @@ class IntellectualSnake:
 
         return letter
 
+    def addNewFood(self):
+        x, y = self.generateRandomFieldPosition()
+        food = Food(x, y)
+
+        while pygame.sprite.spritecollide(food, self.fieldObjects, False):
+            x, y = self.generateRandomFieldPosition()
+            food = Food(x, y)
+
+        self.fieldObjects.add(food)
+
+    def generateRandomFieldPosition(self):
+        x = random.randrange(COLUMNS) * SEGMENT_SIZE
+        y = random.randrange(ROWS) * SEGMENT_SIZE
+        return x, y
+
     def findControlByLetter(self, letter):
         controls = [control for control in self.directionControls if control.letter == letter]
         if not controls:
             return False
         else:
             return controls[0]
+
+    def moveBody(self, eatenFood):
+        # Add new segment at the head's position
+        newSegment = Segment(self.head.rect.x, self.head.rect.y)
+        self.segments.insert(0, newSegment)
+        self.fieldObjects.add(newSegment)
+
+        # Remove tail unless we ate food
+        if not eatenFood:
+            self.fieldObjects.remove(self.segments.pop())
+
