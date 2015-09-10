@@ -6,10 +6,12 @@ from src.sprites.Head import *
 from src.sprites.DirectionControl import *
 from src.sprites.Segment import *
 from src.sprites.Food import *
+from src.sprites.HudText import *
 
 class IntellectualSnake:
     def __init__(self):
         self.running = True
+        self.isGameOver = False
 
         # Init the screen
         screenWidth = FIELD_WIDTH + 2 * FIELD_MARGIN
@@ -20,6 +22,10 @@ class IntellectualSnake:
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((250, 250, 250))
+
+        # Add hud fields
+        self.hudTitle = HudText(FIELD_MARGIN, 10, 300, "Intellectual Snake!")
+        self.hudGameStatus = HudText(FIELD_MARGIN, FIELD_MARGIN + FIELD_HEIGHT + 10, 300, "")
 
         # Init The Snake
         headX = SEGMENT_SIZE * COLUMNS / 2
@@ -52,8 +58,11 @@ class IntellectualSnake:
                 self.running = False
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 self.running = False
-            elif event.type == KEYDOWN:
+            elif event.type == KEYDOWN and not self.isGameOver:
                 self.handleKeyDown(event.key)
+
+        if self.isGameOver:
+            return
 
         # Move the snake
         self.head.update(time)
@@ -67,20 +76,30 @@ class IntellectualSnake:
                     self.fieldObjects.remove(sprite)
                     self.addNewFood()
                     eatenFood = True
+                elif type(sprite) is Segment:
+                    self.hudGameStatus.setContent("Game over :-(")
+                    self.isGameOver = True
 
+            # Move the snake's body (possibly extend it if some food was eaten)
             self.moveBody(eatenFood)
 
     def render(self):
+        # Render field objects on a separate Surface (which allows us to work in an independent
+        # coordinate system)
         field = pygame.Surface([FIELD_WIDTH, FIELD_HEIGHT])
         field.fill((0, 0, 255))
         field.blit(self.head.image, self.head.rect)
         self.fieldObjects.draw(field)
 
+        # Render the game field and other UI objects directly on the screen
         self.screen.blit(self.background, (0, 0))
         self.screen.blit(field, (FIELD_MARGIN, FIELD_MARGIN))
 
         for control in self.directionControls:
             self.screen.blit(control.image, control.rect)
+
+        self.screen.blit(self.hudTitle.image, self.hudTitle.rect)
+        self.screen.blit(self.hudGameStatus.image, self.hudGameStatus.rect)
 
     def isRunning(self):
         return self.running
