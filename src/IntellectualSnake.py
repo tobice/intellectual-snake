@@ -12,6 +12,7 @@ class IntellectualSnake:
     def __init__(self):
         self.running = True
         self.isGameOver = False
+        self.score = 0
 
         # Init the screen
         screenWidth = FIELD_WIDTH + 2 * FIELD_MARGIN
@@ -26,6 +27,7 @@ class IntellectualSnake:
         # Add hud fields
         self.hudTitle = HudText(FIELD_MARGIN, 10, 300, "Intellectual Snake!")
         self.hudGameStatus = HudText(FIELD_MARGIN, FIELD_MARGIN + FIELD_HEIGHT + 10, 300, "")
+        self.hudScore = HudText(FIELD_MARGIN + FIELD_WIDTH - 100, 10, 100, "Score: 0")
 
         # Init The Snake
         headX = SEGMENT_SIZE * COLUMNS / 2
@@ -76,6 +78,8 @@ class IntellectualSnake:
                     self.fieldObjects.remove(sprite)
                     self.addNewFood()
                     eatenFood = True
+                    self.score += 1
+                    self.hudScore.setContent("Score: %d" % self.score)
                 elif type(sprite) is Segment:
                     self.hudGameStatus.setContent("Game over :-(")
                     self.isGameOver = True
@@ -100,6 +104,7 @@ class IntellectualSnake:
 
         self.screen.blit(self.hudTitle.image, self.hudTitle.rect)
         self.screen.blit(self.hudGameStatus.image, self.hudGameStatus.rect)
+        self.screen.blit(self.hudScore.image, self.hudScore.rect)
 
     def isRunning(self):
         return self.running
