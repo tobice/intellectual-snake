@@ -3,22 +3,31 @@ from pygame.locals import *
 from src.utils.textUtils import *
 from src.sprites.Head import *
 from src.sprites.DirectionControl import *
+from src.sprites.Segment import *
 
 class IntellectualSnake:
     def __init__(self):
         self.running = True
 
+        # Init the screen
         screenWidth = FIELD_WIDTH + 2 * FIELD_MARGIN
         screenHeight = FIELD_HEIGHT + 2 * FIELD_MARGIN
         self.screen = pygame.display.set_mode((screenWidth, screenHeight))
 
-        # Display The Background
+        # Prepare the background
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((250, 250, 250))
 
-        self.head = Head(SEGMENT_SIZE * COLUMNS / 2, SEGMENT_SIZE * ROWS / 2)
+        # Init The Snake
+        headX = SEGMENT_SIZE * COLUMNS / 2
+        headY = SEGMENT_SIZE * ROWS / 2
+        self.head = Head(headX, headY)
+        self.segments = []
+        for i in xrange(0, INIT_SNAKE_LENGTH):
+            self.segments.append(Segment(headX - i * SEGMENT_SIZE, headY))
 
+        # Init direction controls
         self.directionControls = \
             DirectionControl(screenWidth / 2, 10, UP), \
             DirectionControl(screenWidth / 2, FIELD_MARGIN + FIELD_HEIGHT + 10, DOWN), \
@@ -39,10 +48,17 @@ class IntellectualSnake:
 
         self.head.update(time)
 
+        if self.head.moved:
+            self.segments.pop()
+            self.segments.insert(0, Segment(self.head.rect.x, self.head.rect.y))
+
     def render(self):
         field = pygame.Surface([FIELD_WIDTH, FIELD_HEIGHT])
         field.fill((0, 0, 255))
         field.blit(self.head.image, self.head.rect)
+
+        for segment in self.segments:
+            field.blit(segment.image, segment.rect)
 
         self.screen.blit(self.background, (0, 0))
         self.screen.blit(field, (FIELD_MARGIN, FIELD_MARGIN))

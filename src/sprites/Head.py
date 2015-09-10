@@ -13,6 +13,7 @@ class Head(pygame.sprite.Sprite):
 
         self.direction = RIGHT
         self.stepProgress = 0
+        self.moved = False
 
     def changeDirection(self, direction):
         if direction == self.direction:
@@ -32,5 +33,6 @@ class Head(pygame.sprite.Sprite):
             self.stepProgress = 0
             self.rect.x = (self.rect.x + (self.direction[0] * SEGMENT_SIZE)) % FIELD_WIDTH
             self.rect.y = (self.rect.y + (self.direction[1] * SEGMENT_SIZE)) % FIELD_HEIGHT
+            self.moved = True
         else:
-            pass
+            self.moved = False
