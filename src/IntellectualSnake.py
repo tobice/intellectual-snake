@@ -39,10 +39,10 @@ class IntellectualSnake:
 
         # Init direction controls
         self.directionControls = \
-            DirectionControl(screenWidth / 2, 10, UP), \
-            DirectionControl(screenWidth / 2, FIELD_MARGIN + FIELD_HEIGHT + 10, DOWN), \
-            DirectionControl(10, screenHeight / 2, LEFT), \
-            DirectionControl(FIELD_MARGIN + FIELD_WIDTH + 10, screenHeight / 2, RIGHT)
+            DirectionControl(headX, headY, UP), \
+            DirectionControl(headX, headY, DOWN), \
+            DirectionControl(headX, headY, LEFT), \
+            DirectionControl(headX, headY, RIGHT)
 
         for control in self.directionControls:
             control.setLetter(self.generateNewDirectionLetter())
@@ -66,7 +66,7 @@ class IntellectualSnake:
         if self.isGameOver:
             return
 
-        # Move the snake
+        # Update the snake's head
         self.head.update(time)
 
         if self.head.moved:
@@ -86,6 +86,10 @@ class IntellectualSnake:
 
             # Move the snake's body (possibly extend it if some food was eaten)
             self.moveBody(eatenFood)
+
+            # Move direction controls to follow the snake's head
+            for control in self.directionControls:
+                control.setHeadPosition(self.head.rect.x, self.head.rect.y)
 
     def render(self):
         # Render field objects on a separate Surface (which allows us to work in an independent
