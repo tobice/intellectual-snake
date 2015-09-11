@@ -1,22 +1,22 @@
-import pygame
-from src.constants import *
+from MovableSprite import *
 
-class DirectionControl(pygame.sprite.Sprite):
+class DirectionControl(MovableSprite):
     def __init__(self, x, y, direction):
-        super(DirectionControl, self).__init__()
-        self.image = pygame.Surface([SEGMENT_SIZE, SEGMENT_SIZE])
+        super(DirectionControl, self).__init__(SEGMENT_SIZE, SEGMENT_SIZE, x, y)
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))
-        self.rect = self.image.get_rect()
 
         self.letter = ''
         self.direction = direction
 
         self.setHeadPosition(x, y)
+        self.rect.x = self.targetX
+        self.rect.y = self.targetY
 
-    def setHeadPosition(self, x, y):
-        self.rect.x = FIELD_MARGIN + x + self.direction[0] * SEGMENT_SIZE
-        self.rect.y = FIELD_MARGIN + y + self.direction[1] * SEGMENT_SIZE
+    def setHeadPosition(self, targetX, targetY):
+        super(DirectionControl, self).moveTo(
+            FIELD_MARGIN + targetX + self.direction[0] * SEGMENT_SIZE,
+            FIELD_MARGIN + targetY + self.direction[1] * SEGMENT_SIZE)
 
     def setLetter(self, letter):
         self.letter = letter

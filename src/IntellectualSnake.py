@@ -66,8 +66,14 @@ class IntellectualSnake:
         if self.isGameOver:
             return
 
-        # Update the snake's head
+        # Update the snake
         self.head.update(time)
+        for segment in self.segments:
+            segment.update(time)
+
+        # Update the direction controls
+        for control in self.directionControls:
+            control.update(time)
 
         if self.head.moved:
             eatenFood = False
@@ -154,12 +160,19 @@ class IntellectualSnake:
             return controls[0]
 
     def moveBody(self, eatenFood):
-        # Add new segment at the head's position
-        newSegment = Segment(self.head.rect.x, self.head.rect.y)
+        # Add new segment to the end of the snake's body (the position of the last segment) and then
+        # let it smoothly move to the head's position.
+        newSegment = Segment(
+            self.head.rect.x - self.head.direction[0] * SEGMENT_SIZE,
+            self.head.rect.y - self.head.direction[1] * SEGMENT_SIZE)
+        newSegment.moveTo(self.head.rect.x, self.head.rect.y)
+        self.segments[0].setDirection(self.head.direction)
         self.segments.insert(0, newSegment)
         self.fieldObjects.add(newSegment)
 
-        # Remove tail unless we ate food
+        # Unless food was eaten, Remove tail and let the last segment smoothly move in the
+        # body direction.
         if not eatenFood:
             self.fieldObjects.remove(self.segments.pop())
+            self.segments[-1].moveInDirection(self.segments[-1].direction)
 

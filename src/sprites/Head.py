@@ -5,7 +5,8 @@ class Head(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super(Head, self).__init__()
         self.image = pygame.Surface([SEGMENT_SIZE, SEGMENT_SIZE])
-        self.image.fill(SNAKE_COLOR)
+        self.image.fill(WHITE)
+        self.image.set_colorkey(WHITE) # Head is transparent
         self.rect = self.image.get_rect()
 
         self.rect.x = x
