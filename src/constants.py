@@ -1,5 +1,4 @@
-import os
-import sys
+import assets
 
 # Game field dimensions and layout
 SEGMENT_SIZE = 25
@@ -31,7 +30,7 @@ DIRECTION_CONTROL_COLOR = BACKGROUND_COLOR
 WHITE = (255, 255, 255)
 
 # Font
-FONT = os.path.dirname(sys.argv[0]) + "/../assets/RobotoCondensed-Bold.ttf"
+FONT = assets.path("RobotoCondensed-Bold.ttf")
 FONT_SIZE = SEGMENT_SIZE
 
 # Inner mechanics constants

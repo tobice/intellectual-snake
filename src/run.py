@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-import sys
 import os
+import assets
+import sys
 from IntellectualSnake import *
 
 class FpsClock:
@@ -36,7 +37,7 @@ class FpsClock:
         return
 
 def loadDictionary():
-    path = os.path.dirname(sys.argv[0]) + "/../assets/dictionary"
+    path = assets.path("dictionary")
     if not os.path.isfile(path):
         print("Unable to find the dictionary file in the assets folder!")
         sys.exit(1)

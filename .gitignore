@@ -2,3 +2,7 @@
 intellectual-snake.iml
 .idea
 *.pyc
+dist
+build
+run.spec
+IntellectualSnake.spec
