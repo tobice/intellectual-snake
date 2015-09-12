@@ -29,10 +29,10 @@ class IntellectualSnake:
         self.background.fill(BACKGROUND_COLOR)
 
         # Add hud fields
-        self.hudTitle = HudText(FIELD_MARGIN, 10, 300, "Intellectual Snake!")
+        self.hudTitle = HudText(FIELD_MARGIN, 5, 300, "Intellectual Snake!")
         self.hudGameStatus = HudText(FIELD_MARGIN + FIELD_WIDTH - 150,
-                                     FIELD_MARGIN + FIELD_HEIGHT + 10, 300, "")
-        self.hudScore = HudText(FIELD_MARGIN + FIELD_WIDTH - 100, 10, 100, "Score: 0")
+                                     FIELD_MARGIN + FIELD_HEIGHT + 5, 300, "")
+        self.hudScore = HudText(FIELD_MARGIN + FIELD_WIDTH - 100, 5, 100, "Score: 0")
 
         # Init The Snake
         headX = SEGMENT_SIZE * COLUMNS / 2
