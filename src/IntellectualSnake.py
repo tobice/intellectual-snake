@@ -9,6 +9,7 @@ from src.sprites.Food import *
 from src.sprites.HudText import *
 from src.sprites.Wall import *
 from src.sprites.Obstacle import *
+from src.sprites.BonusWord import *
 
 class IntellectualSnake:
     def __init__(self, dictionary):
@@ -29,7 +30,8 @@ class IntellectualSnake:
 
         # Add hud fields
         self.hudTitle = HudText(FIELD_MARGIN, 10, 300, "Intellectual Snake!")
-        self.hudGameStatus = HudText(FIELD_MARGIN, FIELD_MARGIN + FIELD_HEIGHT + 10, 300, "")
+        self.hudGameStatus = HudText(FIELD_MARGIN + FIELD_WIDTH - 150,
+                                     FIELD_MARGIN + FIELD_HEIGHT + 10, 300, "")
         self.hudScore = HudText(FIELD_MARGIN + FIELD_WIDTH - 100, 10, 100, "Score: 0")
 
         # Init The Snake
@@ -68,6 +70,9 @@ class IntellectualSnake:
         # Init empty array of obstacles
         self.obstacles = []
 
+        # Init Bonus word
+        self.bonusWord = None
+
     def update(self, time):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -92,6 +97,10 @@ class IntellectualSnake:
         # Generate random obstacle
         if didOccur(OBSTACLE_RATE, time):
             self.addNewObstacle()
+
+        # Generate random bonus word
+        if self.bonusWord is None and didOccur(BONUS_WORD_RATE, time):
+            self.addNewBonusWord()
 
         if self.head.moved:
             eatenFood = False
@@ -134,6 +143,9 @@ class IntellectualSnake:
         self.screen.blit(self.hudGameStatus.image, self.hudGameStatus.rect)
         self.screen.blit(self.hudScore.image, self.hudScore.rect)
 
+        if self.bonusWord is not None:
+            self.screen.blit(self.bonusWord.image, self.bonusWord.rect)
+
     def isRunning(self):
         return self.running
 
@@ -141,16 +153,23 @@ class IntellectualSnake:
         letter = pygame.key.name(key)
 
         # Find direction control matching the pressed letter. If found, change the snake's
-        # direction according to the control and
+        # direction according to the control
         control = self.findControlByLetter(letter)
         if control:
             if self.head.changeDirection(control.direction):
                 control.setLetter(self.generateNewDirectionLetter())
 
+        # Update the obstacles with the current letter
         for obstacle in self.obstacles:
             if obstacle.typeLetter(letter):
                 self.obstacles.remove(obstacle)
                 self.fieldObjects.remove(obstacle)
+
+        # Update Bonus word with the current letter
+        if self.bonusWord is not None:
+            if self.bonusWord.typeLetter(letter):
+                self.removeTail(len(self.bonusWord.word))
+                self.bonusWord = None
 
     def generateNewDirectionLetter(self):
         letter = getRandomLetter()
@@ -189,6 +208,10 @@ class IntellectualSnake:
         orientation = random.choice((HORIZONTAL, VERTICAL))
         return Obstacle(x, y, word, orientation)
 
+    def addNewBonusWord(self):
+        self.bonusWord = BonusWord(FIELD_MARGIN, FIELD_MARGIN + FIELD_HEIGHT + 10,
+                                   random.choice(self.dictionary))
+
     def findControlByLetter(self, letter):
         controls = [control for control in self.directionControls if control.letter == letter]
         if not controls:
@@ -210,8 +233,14 @@ class IntellectualSnake:
         # Unless food was eaten, Remove tail and let the last segment smoothly move in the
         # body direction.
         if not eatenFood:
-            self.fieldObjects.remove(self.segments.pop())
-            self.segments[-1].moveInDirection(self.segments[-1].direction)
+            self.removeTail(1)
+
+    def removeTail(self, length):
+        for i in xrange(length):
+            if len(self.segments) > 1:
+                self.fieldObjects.remove(self.segments.pop())
+
+        self.segments[-1].moveInDirection(self.segments[-1].direction)
 
 
 # Utility functions

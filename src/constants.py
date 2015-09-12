@@ -21,6 +21,7 @@ WHITE = (255, 255, 255)
 
 # How many obstacles appears per second on average
 OBSTACLE_RATE = 0.3
+BONUS_WORD_RATE = 1
 
 # Inner mechanics constants
 HORIZONTAL = True
