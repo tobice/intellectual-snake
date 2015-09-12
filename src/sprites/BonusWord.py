@@ -6,8 +6,7 @@ class BonusWord(pygame.sprite.Sprite):
         super(BonusWord, self).__init__()
 
         self.image = pygame.Surface((150 + SEGMENT_SIZE * len(word), SEGMENT_SIZE))
-        self.image.fill(WHITE)
-        self.image.set_colorkey(WHITE)
+        self.image.fill(BACKGROUND_COLOR)
         self.rect = self.image.get_rect()
 
         self.rect.x = x
@@ -19,6 +18,7 @@ class BonusWord(pygame.sprite.Sprite):
         self.renderWord()
 
     def renderWord(self):
+        self.image.fill(BACKGROUND_COLOR)
         offset = self.renderLetter("BONUS word: ", OBSTACLE_LETTER_COLOR, 0)
         for i, letter in enumerate(self.word):
             offset += self.renderLetter(letter,
@@ -27,7 +27,7 @@ class BonusWord(pygame.sprite.Sprite):
 
     def renderLetter(self, letter, color, x):
         # Paint the letter
-        font = pygame.font.Font(None, 30)
+        font = pygame.font.Font(None, int(1.2 * SEGMENT_SIZE))
         text = font.render(letter, True, color)
         textRect = text.get_rect()
         textRect.x += x

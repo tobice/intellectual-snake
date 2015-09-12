@@ -15,10 +15,10 @@ class HudText(pygame.sprite.Sprite):
 
     def setContent(self, content):
         # Paint the text
-        font = pygame.font.Font(None, 30)
-        text = font.render(content, 1, (10, 10, 10))
+        font = pygame.font.Font(None, int(1.2 * SEGMENT_SIZE))
+        text = font.render(content, True, HUD_COLOR)
         textRect = text.get_rect()
 
-        self.image.fill(WHITE)
+        self.image.fill(BACKGROUND_COLOR)
         self.image.blit(text, textRect)
 

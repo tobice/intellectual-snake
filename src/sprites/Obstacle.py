@@ -23,6 +23,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.renderWord()
 
     def renderWord(self):
+        self.image.fill(OBSTACLE_COLOR)
         for i, letter in enumerate(self.word):
             self.renderLetter(letter,
                 OBSTACLE_TYPED_LETTER_COLOR if i < self.currentPosition else OBSTACLE_LETTER_COLOR,
@@ -31,7 +32,7 @@ class Obstacle(pygame.sprite.Sprite):
 
     def renderLetter(self, letter, color, x, y):
         # Paint the letter
-        font = pygame.font.Font(None, 30)
+        font = pygame.font.Font(None, int(1.2 * SEGMENT_SIZE))
         text = font.render(letter, True, color)
         textRect = text.get_rect(centerx=SEGMENT_SIZE/2)
         textRect.x += x

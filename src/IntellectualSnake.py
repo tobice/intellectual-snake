@@ -26,7 +26,7 @@ class IntellectualSnake:
         # Prepare the background
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
-        self.background.fill((250, 250, 250))
+        self.background.fill(BACKGROUND_COLOR)
 
         # Add hud fields
         self.hudTitle = HudText(FIELD_MARGIN, 10, 300, "Intellectual Snake!")
@@ -128,7 +128,7 @@ class IntellectualSnake:
         # Render field objects on a separate Surface (which allows us to work in an independent
         # coordinate system)
         field = pygame.Surface([FIELD_WIDTH, FIELD_HEIGHT])
-        field.fill((0, 0, 255))
+        field.fill(FIELD_COLOR)
         field.blit(self.head.image, self.head.rect)
         self.fieldObjects.draw(field)
 
