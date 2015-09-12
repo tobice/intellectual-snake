@@ -7,6 +7,8 @@ from src.sprites.DirectionControl import *
 from src.sprites.Segment import *
 from src.sprites.Food import *
 from src.sprites.HudText import *
+from src.sprites.Wall import *
+from src.sprites.Obstacle import *
 
 class IntellectualSnake:
     def __init__(self):
@@ -54,6 +56,14 @@ class IntellectualSnake:
         # Add initial food to the field
         self.addNewFood()
 
+        # Add walls marking up the field
+        self.fieldObjects.add((
+            Wall(-1, -1, FIELD_WIDTH + 2, 1),
+            Wall(FIELD_WIDTH + 2, -1, 1, FIELD_HEIGHT + 2),
+            Wall(-1, FIELD_HEIGHT + 2, FIELD_WIDTH + 2, 1),
+            Wall(-1, -1, 1, FIELD_HEIGHT)
+        ))
+
     def update(self, time):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -75,6 +85,10 @@ class IntellectualSnake:
         for control in self.directionControls:
             control.update(time)
 
+        # Generate random obstacle
+        if didOccur(OBSTACLE_RATE, time):
+            self.addNewObstacle()
+
         if self.head.moved:
             eatenFood = False
 
@@ -86,7 +100,7 @@ class IntellectualSnake:
                     eatenFood = True
                     self.score += 1
                     self.hudScore.setContent("Score: %d" % self.score)
-                elif type(sprite) is Segment:
+                elif type(sprite) is Segment or type(sprite) is Obstacle:
                     self.hudGameStatus.setContent("Game over :-(")
                     self.isGameOver = True
 
@@ -138,19 +152,30 @@ class IntellectualSnake:
         return letter
 
     def addNewFood(self):
-        x, y = self.generateRandomFieldPosition()
-        food = Food(x, y)
+        food = self.generateRandomFood()
 
         while pygame.sprite.spritecollide(food, self.fieldObjects, False):
-            x, y = self.generateRandomFieldPosition()
-            food = Food(x, y)
+            food = self.generateRandomFood()
 
         self.fieldObjects.add(food)
 
-    def generateRandomFieldPosition(self):
-        x = random.randrange(COLUMNS) * SEGMENT_SIZE
-        y = random.randrange(ROWS) * SEGMENT_SIZE
-        return x, y
+    def generateRandomFood(self):
+        x, y = generateRandomFieldPosition()
+        return Food(x, y)
+
+    def addNewObstacle(self):
+        obstacle = self.generateRandomObstacle()
+
+        while pygame.sprite.spritecollide(obstacle, self.fieldObjects, False):
+            obstacle = self.generateRandomObstacle()
+
+        self.fieldObjects.add(obstacle)
+
+    def generateRandomObstacle(self):
+        x, y = generateRandomFieldPosition()
+        word = "tobik"
+        orientation = random.choice((HORIZONTAL, VERTICAL))
+        return Obstacle(x, y, word, orientation)
 
     def findControlByLetter(self, letter):
         controls = [control for control in self.directionControls if control.letter == letter]
@@ -175,4 +200,22 @@ class IntellectualSnake:
         if not eatenFood:
             self.fieldObjects.remove(self.segments.pop())
             self.segments[-1].moveInDirection(self.segments[-1].direction)
+
+
+# Utility functions
+
+def generateRandomFieldPosition():
+    x = random.randrange(COLUMNS) * SEGMENT_SIZE
+    y = random.randrange(ROWS) * SEGMENT_SIZE
+    return x, y
+
+def didOccur(rate, time):
+    """
+    Return if a random event occurred
+    :param rate: how many times should the event occur during one second
+    :param time: elapsed time
+    :return: True or False
+    """
+    return random.random() < time * rate
+
 
