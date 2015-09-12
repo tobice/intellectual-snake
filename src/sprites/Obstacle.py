@@ -32,7 +32,7 @@ class Obstacle(pygame.sprite.Sprite):
 
     def renderLetter(self, letter, color, x, y):
         # Paint the letter
-        font = pygame.font.Font(None, int(1.2 * SEGMENT_SIZE))
+        font = pygame.font.Font(FONT, int(0.8 * FONT_SIZE))
         text = font.render(letter, True, color)
         textRect = text.get_rect(centerx=SEGMENT_SIZE/2)
         textRect.x += x

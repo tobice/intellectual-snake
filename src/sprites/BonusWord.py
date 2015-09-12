@@ -27,7 +27,7 @@ class BonusWord(pygame.sprite.Sprite):
 
     def renderLetter(self, letter, color, x):
         # Paint the letter
-        font = pygame.font.Font(None, int(1.2 * SEGMENT_SIZE))
+        font = pygame.font.Font(FONT, int(0.9 * FONT_SIZE))
         text = font.render(letter, True, color)
         textRect = text.get_rect()
         textRect.x += x

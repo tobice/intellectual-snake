@@ -1,3 +1,6 @@
+import os
+import sys
+
 # Game field dimensions and layout
 SEGMENT_SIZE = 25
 ROWS = 20
@@ -22,6 +25,9 @@ HUD_COLOR = (255, 255, 255)
 DIRECTION_CONTROL_COLOR = BACKGROUND_COLOR
 WHITE = (255, 255, 255)
 
+# Font
+FONT = os.path.dirname(sys.argv[0]) + "/../assets/RobotoCondensed-Bold.ttf"
+FONT_SIZE = SEGMENT_SIZE
 
 # How many obstacles appears per second on average
 OBSTACLE_RATE = 0.3
