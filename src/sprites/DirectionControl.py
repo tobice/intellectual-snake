@@ -22,7 +22,7 @@ class DirectionControl(MovableSprite):
         self.letter = letter
 
         # Paint the letter
-        font = pygame.font.Font(FONT, FONT_SIZE)
+        font = pygame.font.Font(FONT, int(0.9 * FONT_SIZE))
         text = font.render(self.letter, True, DIRECTION_CONTROL_COLOR)
         textRect = text.get_rect(centerx=SEGMENT_SIZE/2)
 

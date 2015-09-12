@@ -13,6 +13,11 @@ FIELD_MARGIN = 40
 INIT_SNAKE_LENGTH = 10
 STEP_DURATION = 0.1
 
+# Obstacle & bonus word rates
+# (how frequently they appear on average during one second)
+OBSTACLE_RATE = 0.05
+BONUS_WORD_RATE = 0.2
+
 # Colors
 BACKGROUND_COLOR = (19, 72, 101)
 FIELD_COLOR = (26, 210, 250)
@@ -28,10 +33,6 @@ WHITE = (255, 255, 255)
 # Font
 FONT = os.path.dirname(sys.argv[0]) + "/../assets/RobotoCondensed-Bold.ttf"
 FONT_SIZE = SEGMENT_SIZE
-
-# How many obstacles appears per second on average
-OBSTACLE_RATE = 0.3
-BONUS_WORD_RATE = 1
 
 # Inner mechanics constants
 HORIZONTAL = True
