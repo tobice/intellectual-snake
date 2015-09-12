@@ -1,7 +1,7 @@
 import random
+import string
 from pygame.locals import *
 
-from src.utils.textUtils import *
 from src.sprites.Head import *
 from src.sprites.DirectionControl import *
 from src.sprites.Segment import *
@@ -259,4 +259,5 @@ def didOccur(rate, time):
     """
     return random.random() < time * rate
 
-
+def getRandomLetter():
+    return random.choice(string.ascii_lowercase)
