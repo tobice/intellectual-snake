@@ -65,6 +65,9 @@ class IntellectualSnake:
             Wall(-1, -1, 1, FIELD_HEIGHT)
         ))
 
+        # Init empty array of obstacles
+        self.obstacles = []
+
     def update(self, time):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -135,12 +138,19 @@ class IntellectualSnake:
         return self.running
 
     def handleKeyDown(self, key):
+        letter = pygame.key.name(key)
+
         # Find direction control matching the pressed letter. If found, change the snake's
         # direction according to the control and
-        control = self.findControlByLetter(pygame.key.name(key))
+        control = self.findControlByLetter(letter)
         if control:
             if self.head.changeDirection(control.direction):
                 control.setLetter(self.generateNewDirectionLetter())
+
+        for obstacle in self.obstacles:
+            if obstacle.typeLetter(letter):
+                self.obstacles.remove(obstacle)
+                self.fieldObjects.remove(obstacle)
 
     def generateNewDirectionLetter(self):
         letter = getRandomLetter()
@@ -171,10 +181,11 @@ class IntellectualSnake:
             obstacle = self.generateRandomObstacle()
 
         self.fieldObjects.add(obstacle)
+        self.obstacles.append(obstacle)
 
     def generateRandomObstacle(self):
         x, y = generateRandomFieldPosition()
-        word = "tobik"
+        word = random.choice(self.dictionary)
         orientation = random.choice((HORIZONTAL, VERTICAL))
         return Obstacle(x, y, word, orientation)
 

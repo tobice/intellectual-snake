@@ -14,7 +14,10 @@ STEP_DURATION = 0.1
 SNAKE_COLOR = (255, 0, 0)
 FOOD_COLOR = (0, 255, 0)
 OBSTACLE_COLOR = (0, 255, 255)
+OBSTACLE_LETTER_COLOR = (0, 0, 0)
+OBSTACLE_TYPED_LETTER_COLOR = (255, 255, 0)
 WHITE = (255, 255, 255)
+
 
 # How many obstacles appears per second on average
 OBSTACLE_RATE = 0.3
