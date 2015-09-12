@@ -11,7 +11,8 @@ from src.sprites.Wall import *
 from src.sprites.Obstacle import *
 
 class IntellectualSnake:
-    def __init__(self):
+    def __init__(self, dictionary):
+        self.dictionary = dictionary
         self.running = True
         self.isGameOver = False
         self.score = 0
